@@ -1,4 +1,4 @@
-name: Repository Dispatch MacOS
+name: Repository Dispatch MacOS Arm Git
 env:
   QT6_VERSION:     "6.6.2"
 on:

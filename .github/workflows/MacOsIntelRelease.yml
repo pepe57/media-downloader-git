@@ -1,4 +1,4 @@
-name: Repository Dispatch MacOS Release
+name: Repository Dispatch MacOS Intel Release
 env:
   QT6_VERSION:     "6.6.2"
 on:

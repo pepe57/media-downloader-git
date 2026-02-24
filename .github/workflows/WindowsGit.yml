@@ -1,5 +1,4 @@
-
-name: Repository Dispatch Windows
+name: Repository Dispatch Windows Git
 env:
   QT5_VERSION:     "5.15.2"
   QT6_VERSION:     "6.8.1"
