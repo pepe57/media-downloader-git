@@ -3,7 +3,7 @@ env:
   QT6_VERSION:     "6.6.2"
 on:
   repository_dispatch:
-    types: [PublishArmMacGit]
+    types: [PublishMacArmGit]
 jobs:
   buildMacGitEvent:
     runs-on: macos-14
