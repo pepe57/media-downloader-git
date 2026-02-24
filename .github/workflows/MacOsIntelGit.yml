@@ -3,7 +3,7 @@ env:
   QT6_VERSION:     "6.6.2"
 on:
   repository_dispatch:
-    types: [PublishMacGit]
+    types: [PublishMacIntelGit]
 jobs:
   buildMacGitEvent:
     runs-on: macos-14
@@ -27,24 +27,24 @@ jobs:
       name: Configure CMake
       env:
         CMAKE_PREFIX_PATH: "${{github.workspace}}/qt6/Qt/${{ env.QT6_VERSION }}"
-      run: cmake -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/MediaDownloader -DSOURCE_PATH=${{github.workspace}}/MAC/ -DCMAKE_VERBOSE_MAKEFILE=FALSE -DCMAKE_BUILD_TYPE=RELEASE -S ${{github.workspace}}/MAC/ -B ${{github.workspace}}/MAC/build6
+      run: cmake -DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/MediaDownloader -DSOURCE_PATH=${{github.workspace}}/MAC/ -DCMAKE_VERBOSE_MAKEFILE=FALSE -DCMAKE_BUILD_TYPE=RELEASE -S ${{github.workspace}}/MAC/ -B ${{github.workspace}}/MAC/build6
     -
       name: Build
       run: cmake --build ${{github.workspace}}/MAC/build6
     -
       name: Download 3rdParty Apps
       run: |
-           #aria2c -d ${{github.workspace}}/MAC/build6/MediaDownloader.app/Contents/MacOS/extra https://github.com/yt-dlp/yt-dlp/releases/download/2024.04.09/yt-dlp
+           #aria2c -d ${{github.workspace}}/MAC/build6/MediaDownloader.app/Contents/MacOS/extra https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
           
            mkdir -p ${{github.workspace}}/MAC/build6/MediaDownloader.app/Contents/MacOS/extra
            mkdir -p ${{github.workspace}}/MAC/build6/MediaDownloader.app/Contents/Resources
           
            cp ${{github.workspace}}/MAC/src/media-downloader.icns ${{github.workspace}}/MAC/build6/MediaDownloader.app/Contents/Resources/MediaDownloader.icns
 
-           aria2c -d ${{github.workspace}}/MAC/build6/MediaDownloader.app/Contents/MacOS/extra https://github.com/mhogomchungu/media-downloader-git/releases/download/0.0.0/ffmpeg.macos.zip
+           aria2c -d ${{github.workspace}}/MAC/build6/MediaDownloader.app/Contents/MacOS/extra https://github.com/mhogomchungu/media-downloader-git/releases/download/0.0.0/ffmpeg-macos-intel.zip
            cd ${{github.workspace}}/MAC/build6/MediaDownloader.app/Contents/MacOS/extra
-           tar -xf ffmpeg.macos.zip
-           rm -rf ffmpeg.macos.zip
+           tar -xf ffmpeg-macos-intel.zip
+           rm -rf ffmpeg-macos-intel.zip
     -
       name: Create img Bundle
       run: |
@@ -53,17 +53,17 @@ jobs:
     -
       name: Rename Bundle
       run: |
-           cp ${{github.workspace}}/MAC/build6/MediaDownloader.dmg ${{github.workspace}}/MAC/build6/MediaDownloaderQt6.git.dmg
+           cp ${{github.workspace}}/MAC/build6/MediaDownloader.dmg ${{github.workspace}}/MAC/build6/MediaDownloaderQt6.x86_64.git.dmg
     -
      name: Get Hash
      run: | 
           cd ${{github.workspace}}/MAC/build6
-          shasum -a 256 MediaDownloaderQt6.git.dmg > ${{github.workspace}}/ZMacOsGitHash.txt
+          shasum -a 256 MediaDownloaderQt6.x86_64.git.dmg > ${{github.workspace}}/ZMacOsGitx86_64Hash.txt
     -
       name: Post Bundle
       uses: ncipollo/release-action@v1
       with:
-        artifacts: ${{github.workspace}}/ZMacOsGitHash.txt,${{github.workspace}}/MAC/build6/MediaDownloaderQt6.git.dmg
+        artifacts: ${{github.workspace}}/ZMacOsGitx86_64Hash.txt,${{github.workspace}}/MAC/build6/MediaDownloaderQt6.x86_64.git.dmg
         tag: "0.0.0"
         commit: "main"
         allowUpdates: true
